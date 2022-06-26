@@ -21,10 +21,6 @@ export class SessionService {
     if (!findUser)
       throw new BadRequestException('Email or password is invalid');
 
-    // const hashedPassword = await this.hashProvider.createHash(
-    //   createSessionDto.password,
-    // );
-
     const passwordIsValid = await this.hashProvider.compareHash(
       createSessionDto.password,
       findUser.password,
