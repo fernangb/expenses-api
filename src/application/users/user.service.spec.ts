@@ -1,18 +1,76 @@
+import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
+import { UniqueEntityId } from '../../domain/@shared/entities/unique-entity';
+import { User } from '../../domain/users/entities/user.entity';
+import BCryptHashProvider from '../../infra/providers/hash/bcrypt/bcrypt-hash.provider';
+import InMemoryUserRepository from '../../infra/repositories/users/in-memory/in-memory-user.repository';
+import { UserOutput } from './dto/user-output';
 import { UserService } from './user.service';
 
-describe('UserService', () => {
+describe('UserService Unit Tests', () => {
   let service: UserService;
+  let userRepository: InMemoryUserRepository;
+  let hashProvider: BCryptHashProvider;
+
+  const user = new User({
+    id: '1',
+    name: 'User 1',
+    email: 'user@email.com',
+    password: '123',
+  });
+
+  const userOutput = new UserOutput({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+  });
+
+  const hashedPassword = 'abhjdbhshv';
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UserService],
+      providers: [
+        UserService,
+        {
+          provide: InMemoryUserRepository,
+          useValue: createMock<InMemoryUserRepository>(),
+        },
+        {
+          provide: BCryptHashProvider,
+          useValue: createMock<BCryptHashProvider>(),
+        },
+      ],
     }).compile();
 
     service = module.get<UserService>(UserService);
+    userRepository = module.get<InMemoryUserRepository>(InMemoryUserRepository);
+    hashProvider = module.get<BCryptHashProvider>(BCryptHashProvider);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('create', () => {
+    it('should create a user', async () => {
+      jest
+        .spyOn(service, 'findByEmail')
+        .mockReturnValue(Promise.resolve(undefined));
+      jest.spyOn(userRepository, 'create');
+      jest
+        .spyOn(hashProvider, 'createHash')
+        .mockReturnValue(Promise.resolve(hashedPassword));
+      jest.spyOn(UniqueEntityId, 'create').mockReturnValue('1');
+
+      const createdUser = await service.create({
+        name: user.name,
+        email: user.email,
+        password: user.password,
+      });
+
+      expect(createdUser).toStrictEqual(userOutput);
+      expect(userRepository.create).toBeCalled();
+      expect(hashProvider.createHash).toBeCalled();
+    });
   });
 });

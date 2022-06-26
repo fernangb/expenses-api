@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { Expense } from 'src/domain/expenses/entities/expense.entity';
-import InMemoryExpenseRepository from 'src/infra/repositories/expenses/in-memory/in-memory-expense.repository';
+import { Expense } from '../../domain/expenses/entities/expense.entity';
+import InMemoryExpenseRepository from '../../infra/repositories/expenses/in-memory/in-memory-expense.repository';
 import { UserService } from '../users/user.service';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { ExpenseOutput } from './dto/expense-output';

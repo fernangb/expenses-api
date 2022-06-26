@@ -1,17 +1,25 @@
+import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from './user.controller';
 import { UserService } from './user.service';
+import { UserController } from './user.controller';
 
-describe('UserController', () => {
+describe('UserController Unit Tests', () => {
   let controller: UserController;
+  let service: UserService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [UserController],
-      providers: [UserService],
+      providers: [
+        UserController,
+        {
+          provide: UserService,
+          useValue: createMock<UserService>(),
+        },
+      ],
     }).compile();
 
     controller = module.get<UserController>(UserController);
+    service = module.get<UserService>(UserService);
   });
 
   it('should be defined', () => {

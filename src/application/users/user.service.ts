@@ -1,7 +1,8 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { User } from 'src/domain/users/entities/user.entity';
-import BCryptHashProvider from 'src/infra/providers/hash/bcrypt/bcrypt-hash.provider';
-import InMemoryUserRepository from 'src/infra/repositories/users/in-memory/in-memory-user.repository';
+import { Inject, Injectable } from '@nestjs/common';
+import { User } from '../../domain/users/entities/user.entity';
+import BCryptHashProvider from '../../infra/providers/hash/bcrypt/bcrypt-hash.provider';
+import InMemoryUserRepository from '../../infra/repositories/users/in-memory/in-memory-user.repository';
+import { EmailAlreadyUsedException } from '../@shared/exceptions/email-already-used.exception';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserOutput } from './dto/user-output';
@@ -17,9 +18,7 @@ export class UserService {
   async create(createUserDto: CreateUserDto): Promise<UserOutput> {
     const foundUser = await this.findByEmail(createUserDto.email);
 
-    if (foundUser) {
-      throw new BadRequestException('This email is already used');
-    }
+    if (foundUser) throw new EmailAlreadyUsedException();
 
     const hashedPassword = await this.hashProvider.createHash(
       createUserDto.password,

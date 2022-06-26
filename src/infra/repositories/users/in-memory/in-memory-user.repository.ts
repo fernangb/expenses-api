@@ -1,6 +1,6 @@
 import UserRepositoryInterface from '../user-repository.interface';
 import { Injectable } from '@nestjs/common';
-import { User } from 'src/domain/users/entities/user.entity';
+import { User } from '../../../../domain/users/entities/user.entity';
 
 @Injectable()
 export default class InMemoryUserRepository implements UserRepositoryInterface {

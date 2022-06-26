@@ -1,17 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import BCryptHashProvider from 'src/infra/providers/hash/bcrypt/bcrypt-hash.provider';
+import BCryptHashProvider from '../../infra/providers/hash/bcrypt/bcrypt-hash.provider';
 import { UserService } from '../users/user.service';
 import { CreateSessionDto } from './dto/create-session.dto';
-import authConfig from 'src/config/auth';
-import { sign } from 'jsonwebtoken';
 import { UserOutput } from '../users/dto/user-output';
 import { SessionOutput } from './dto/session-output';
+import JSONWebTokenProvider from '../../infra/providers/token/jsonwebtoken/jsonwebtoken.provider';
 
 @Injectable()
 export class SessionService {
   constructor(
     private userService: UserService,
     private hashProvider: BCryptHashProvider,
+    private tokenProvider: JSONWebTokenProvider,
   ) {}
 
   async create(createSessionDto: CreateSessionDto) {
@@ -28,12 +28,7 @@ export class SessionService {
     if (!passwordIsValid)
       throw new BadRequestException('Email or password is invalid');
 
-    const { secret, expiresIn } = authConfig.jwt;
-
-    const token = sign({}, secret, {
-      subject: findUser.id,
-      expiresIn,
-    });
+    const token = this.tokenProvider.createToken(findUser.id);
 
     const userOutput = new UserOutput({
       id: findUser.id,
