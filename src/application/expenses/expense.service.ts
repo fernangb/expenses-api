@@ -37,6 +37,7 @@ export class ExpenseService {
       value: expense.value,
       dueDate: expense.dueDate,
       user: expense.user,
+      isActive: expense.isActive,
     });
   }
 
@@ -58,6 +59,7 @@ export class ExpenseService {
       value: expense.value,
       dueDate: expense.dueDate,
       user: expense.user,
+      isActive: expense.isActive,
     });
   }
 
@@ -91,6 +93,7 @@ export class ExpenseService {
       value: expense.value,
       dueDate: expense.dueDate,
       user: expense.user,
+      isActive: expense.isActive,
     });
   }
 
@@ -112,6 +115,7 @@ export class ExpenseService {
           value: expense.value,
           dueDate: expense.dueDate,
           user: expense.user,
+          isActive: expense.isActive,
         }),
     );
   }

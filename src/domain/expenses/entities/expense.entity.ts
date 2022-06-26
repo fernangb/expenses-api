@@ -17,6 +17,7 @@ export class Expense {
   value: number;
   dueDate: Date;
   user: UserOutput;
+  isActive: boolean;
 
   constructor(props: ExpenseProps) {
     this.id = props.id ? props.id : UniqueEntityId.create();
@@ -25,5 +26,6 @@ export class Expense {
     this.value = props.value;
     this.dueDate = props.dueDate;
     this.user = props.user;
+    this.isActive = true;
   }
 }

@@ -7,6 +7,7 @@ interface ExpenseOutputProps {
   value: number;
   dueDate: Date;
   user: UserOutput;
+  isActive: boolean;
 }
 
 export class ExpenseOutput {
@@ -16,6 +17,7 @@ export class ExpenseOutput {
   value: number;
   dueDate: Date;
   user: UserOutput;
+  isActive: boolean;
 
   constructor(props: ExpenseOutputProps) {
     this.id = props.id;
@@ -24,5 +26,6 @@ export class ExpenseOutput {
     this.value = props.value;
     this.dueDate = props.dueDate;
     this.user = props.user;
+    this.isActive = props.isActive;
   }
 }
