@@ -19,8 +19,6 @@ export class ExpenseService {
     try {
       const findUser = await this.userService.findOne(createExpenseDto.userId);
 
-      console.log(findUser);
-
       if (!findUser) throw new BadRequestException('User not found');
 
       const expense = new Expense({

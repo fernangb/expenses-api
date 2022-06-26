@@ -43,19 +43,15 @@ export class UserService {
   }
 
   async findOne(id: string): Promise<UserOutput> {
-    try {
-      const user = await this.userRepository.findById(id);
+    const user = await this.userRepository.findById(id);
 
-      if (!user) return undefined;
+    if (!user) return undefined;
 
-      return new UserOutput({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      });
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
+    return new UserOutput({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    });
   }
 
   async findByEmail(email: string): Promise<User> {
