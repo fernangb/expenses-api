@@ -16,29 +16,35 @@ export class ExpenseService {
   ) {}
 
   async create(createExpenseDto: CreateExpenseDto) {
-    const findUser = await this.userService.findOne(createExpenseDto.userId);
+    try {
+      const findUser = await this.userService.findOne(createExpenseDto.userId);
 
-    if (!findUser) throw new BadRequestException('User not found');
+      console.log(findUser);
 
-    const expense = new Expense({
-      name: createExpenseDto.name,
-      description: createExpenseDto.description,
-      value: createExpenseDto.value,
-      user: findUser,
-      dueDate: createExpenseDto.dueDate,
-    });
+      if (!findUser) throw new BadRequestException('User not found');
 
-    await this.expenseRepository.create(expense);
+      const expense = new Expense({
+        name: createExpenseDto.name,
+        description: createExpenseDto.description,
+        value: createExpenseDto.value,
+        user: findUser,
+        dueDate: createExpenseDto.dueDate,
+      });
 
-    return new ExpenseOutput({
-      id: expense.id,
-      name: expense.name,
-      description: expense.description,
-      value: expense.value,
-      dueDate: expense.dueDate,
-      user: expense.user,
-      isActive: expense.isActive,
-    });
+      await this.expenseRepository.create(expense);
+
+      return new ExpenseOutput({
+        id: expense.id,
+        name: expense.name,
+        description: expense.description,
+        value: expense.value,
+        dueDate: expense.dueDate,
+        user: expense.user,
+        isActive: expense.isActive,
+      });
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   async findAllByUser(userId: string): Promise<ExpenseOutput[]> {
@@ -67,34 +73,38 @@ export class ExpenseService {
     id: string,
     updateExpenseDto: UpdateExpenseDto,
   ): Promise<ExpenseOutput> {
-    const findExpense = await this.expenseRepository.findById(id);
+    try {
+      const findExpense = await this.expenseRepository.findById(id);
 
-    if (!findExpense) throw new BadRequestException('Invalid Id');
+      if (!findExpense) throw new BadRequestException('Invalid Id');
 
-    const findUser = await this.userService.findOne(updateExpenseDto.userId);
+      const findUser = await this.userService.findOne(updateExpenseDto.userId);
 
-    if (!findUser) throw new BadRequestException('User not found');
+      if (!findUser) throw new BadRequestException('User not found');
 
-    const expense = new Expense({
-      id,
-      name: updateExpenseDto.name,
-      description: updateExpenseDto.description,
-      value: updateExpenseDto.value,
-      dueDate: updateExpenseDto.dueDate,
-      user: findUser,
-    });
+      const expense = new Expense({
+        id,
+        name: updateExpenseDto.name,
+        description: updateExpenseDto.description,
+        value: updateExpenseDto.value,
+        dueDate: updateExpenseDto.dueDate,
+        user: findUser,
+      });
 
-    await this.expenseRepository.update(expense);
+      await this.expenseRepository.update(expense);
 
-    return new ExpenseOutput({
-      id: expense.id,
-      name: expense.name,
-      description: expense.description,
-      value: expense.value,
-      dueDate: expense.dueDate,
-      user: expense.user,
-      isActive: expense.isActive,
-    });
+      return new ExpenseOutput({
+        id: expense.id,
+        name: expense.name,
+        description: expense.description,
+        value: expense.value,
+        dueDate: expense.dueDate,
+        user: expense.user,
+        isActive: expense.isActive,
+      });
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   async remove(id: string): Promise<void> {
