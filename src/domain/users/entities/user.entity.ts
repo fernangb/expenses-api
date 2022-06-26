@@ -14,7 +14,7 @@ export class User {
   password: string;
 
   constructor(props: UserProps) {
-    this.id = props.id ?? UniqueEntityId.create();
+    this.id = props.id ? props.id : UniqueEntityId.create();
     this.name = props.name;
     this.email = props.email;
     this.password = props.password;
