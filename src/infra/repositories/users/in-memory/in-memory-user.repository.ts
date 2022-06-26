@@ -10,7 +10,7 @@ export default class InMemoryUserRepository implements UserRepositoryInterface {
     this.repository = [];
   }
 
-  async create(data: User) {
+  async create(data: User): Promise<void> {
     this.repository.push(data);
   }
 
