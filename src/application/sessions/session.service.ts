@@ -5,6 +5,7 @@ import { CreateSessionDto } from './dto/create-session.dto';
 import { UserOutput } from '../users/dto/user-output';
 import { SessionOutput } from './dto/session-output';
 import JSONWebTokenProvider from '../../infra/providers/token/jsonwebtoken/jsonwebtoken.provider';
+import { InvalidLoginCredentialsException } from '../@shared/exceptions/invalid-login-credentials.exception';
 
 @Injectable()
 export class SessionService {
@@ -14,19 +15,17 @@ export class SessionService {
     private tokenProvider: JSONWebTokenProvider,
   ) {}
 
-  async create(createSessionDto: CreateSessionDto) {
+  async create(createSessionDto: CreateSessionDto): Promise<SessionOutput> {
     const findUser = await this.userService.findByEmail(createSessionDto.email);
 
-    if (!findUser)
-      throw new BadRequestException('Email or password is invalid');
+    if (!findUser) throw new InvalidLoginCredentialsException();
 
     const passwordIsValid = await this.hashProvider.compareHash(
       createSessionDto.password,
       findUser.password,
     );
 
-    if (!passwordIsValid)
-      throw new BadRequestException('Email or password is invalid');
+    if (!passwordIsValid) throw new InvalidLoginCredentialsException();
 
     const token = this.tokenProvider.createToken(findUser.id);
 
