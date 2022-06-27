@@ -3,14 +3,14 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ExpenseModule } from './application/expenses/expense.module';
-import { SessionModule } from './application/sessions/session.module';
+import { AuthModule } from './application/auth/auth.module';
 import { UserModule } from './application/users/user.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    AuthModule,
     UserModule,
-    SessionModule,
     ExpenseModule,
   ],
   controllers: [AppController],

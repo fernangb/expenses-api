@@ -1,27 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import BCryptHashProvider from '../../infra/providers/hash/bcrypt/bcrypt-hash.provider';
 import { UserService } from '../users/user.service';
-import { CreateSessionDto } from './dto/create-session.dto';
 import { UserOutput } from '../users/dto/user-output';
-import { SessionOutput } from './dto/session-output';
 import JSONWebTokenProvider from '../../infra/providers/token/jsonwebtoken/jsonwebtoken.provider';
 import { InvalidLoginCredentialsException } from '../@shared/exceptions/invalid-login-credentials.exception';
+import { LoginOutput } from './dto/login-output.dto';
+import { LoginInputDto } from './dto/login-input.dto';
 
 @Injectable()
-export class SessionService {
+export class AuthService {
   constructor(
     private userService: UserService,
     private hashProvider: BCryptHashProvider,
     private tokenProvider: JSONWebTokenProvider,
   ) {}
 
-  async create(createSessionDto: CreateSessionDto): Promise<SessionOutput> {
-    const findUser = await this.userService.findByEmail(createSessionDto.email);
+  async login(loginDto: LoginInputDto): Promise<LoginOutput> {
+    const findUser = await this.userService.findByEmail(loginDto.email);
 
     if (!findUser) throw new InvalidLoginCredentialsException();
 
     const passwordIsValid = await this.hashProvider.compareHash(
-      createSessionDto.password,
+      loginDto.password,
       findUser.password,
     );
 
@@ -35,9 +35,13 @@ export class SessionService {
       email: findUser.email,
     });
 
-    return new SessionOutput({
+    return new LoginOutput({
       user: userOutput,
       token,
     });
+  }
+
+  async validateToken(token: string): Promise<boolean> {
+    return this.tokenProvider.validateToken({ token });
   }
 }

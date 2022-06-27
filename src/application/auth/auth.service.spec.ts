@@ -2,15 +2,15 @@ import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 import JSONWebTokenProvider from '../../infra/providers/token/jsonwebtoken/jsonwebtoken.provider';
 import BCryptHashProvider from '../../infra/providers/hash/bcrypt/bcrypt-hash.provider';
-import { SessionService } from './session.service';
 import { UserService } from '../users/user.service';
 import { InvalidLoginCredentialsException } from '../@shared/exceptions/invalid-login-credentials.exception';
 import { User } from '../../domain/users/entities/user.entity';
 import { UserOutput } from '../users/dto/user-output';
-import { SessionOutput } from './dto/session-output';
+import { LoginOutput } from './dto/login-output.dto';
+import { AuthService } from './auth.service';
 
-describe('SessionService Unit Tests', () => {
-  let service: SessionService;
+describe('AuthService Unit Tests', () => {
+  let service: AuthService;
   let userService: UserService;
   let hashProvider: BCryptHashProvider;
   let tokenProvider: JSONWebTokenProvider;
@@ -30,7 +30,7 @@ describe('SessionService Unit Tests', () => {
 
   const token = 'jskljlkshdjshjdhsjhdsjhsj';
 
-  const session = new SessionOutput({
+  const session = new LoginOutput({
     user: userOutput,
     token,
   });
@@ -38,7 +38,7 @@ describe('SessionService Unit Tests', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        SessionService,
+        AuthService,
         {
           provide: UserService,
           useValue: createMock<UserService>(),
@@ -54,7 +54,7 @@ describe('SessionService Unit Tests', () => {
       ],
     }).compile();
 
-    service = module.get<SessionService>(SessionService);
+    service = module.get<AuthService>(AuthService);
     userService = module.get<UserService>(UserService);
     hashProvider = module.get<BCryptHashProvider>(BCryptHashProvider);
     tokenProvider = module.get<JSONWebTokenProvider>(JSONWebTokenProvider);
@@ -64,14 +64,14 @@ describe('SessionService Unit Tests', () => {
     expect(service).toBeDefined();
   });
 
-  describe('create', () => {
+  describe('login', () => {
     it('should not login if email does not exists', async () => {
       jest
         .spyOn(userService, 'findByEmail')
         .mockReturnValue(Promise.resolve(undefined));
 
       await expect(
-        service.create({
+        service.login({
           email: user.email,
           password: user.password,
         }),
@@ -87,7 +87,7 @@ describe('SessionService Unit Tests', () => {
         .mockReturnValue(Promise.resolve(false));
 
       await expect(
-        service.create({
+        service.login({
           email: user.email,
           password: 'jsdjhsjdhjshdshjh',
         }),
@@ -104,7 +104,7 @@ describe('SessionService Unit Tests', () => {
       jest.spyOn(tokenProvider, 'createToken').mockReturnValue(token);
 
       expect(
-        await service.create({
+        await service.login({
           email: user.email,
           password: user.password,
         }),

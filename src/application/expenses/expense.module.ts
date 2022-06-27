@@ -6,9 +6,10 @@ import { UserModule } from '../users/user.module';
 import { TypeormExpenseModel } from 'src/infra/repositories/expenses/typeorm/typeorm-expense.model';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import TypeormExpenseRepository from 'src/infra/repositories/expenses/typeorm/typeorm-expense.repository';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [UserModule],
+  imports: [AuthModule, UserModule],
   controllers: [ExpenseController],
   providers: [
     ExpenseService,

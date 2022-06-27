@@ -6,10 +6,12 @@ import { UserOutput } from '../users/dto/user-output';
 import { Expense } from '../../domain/expenses/entities/expense.entity';
 import { ExpenseOutput } from './dto/expense-output';
 import { ListExpenseOutput } from './dto/list-expense-output.dto';
+import { AuthService } from '../auth/auth.service';
 
 describe('ExpenseController Unit Tests', () => {
   let controller: ExpenseController;
   let service: ExpenseService;
+  let authService: AuthService;
 
   const expense = new Expense({
     id: '1',
@@ -70,11 +72,16 @@ describe('ExpenseController Unit Tests', () => {
           provide: ExpenseService,
           useValue: createMock<ExpenseService>(),
         },
+        {
+          provide: AuthService,
+          useValue: createMock<AuthService>(),
+        },
       ],
     }).compile();
 
     controller = module.get<ExpenseController>(ExpenseController);
     service = module.get<ExpenseService>(ExpenseService);
+    authService = module.get<AuthService>(AuthService);
   });
 
   it('should be defined', () => {

@@ -1,13 +1,13 @@
 import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { SessionService } from './session.service';
-import { SessionController } from './session.controller';
 import { UserOutput } from '../users/dto/user-output';
-import { SessionOutput } from './dto/session-output';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { LoginOutput } from './dto/login-output.dto';
 
-describe('SessionController Unit Tests', () => {
-  let controller: SessionController;
-  let service: SessionService;
+describe('AuthController Unit Tests', () => {
+  let controller: AuthController;
+  let service: AuthService;
 
   const userOutput = new UserOutput({
     id: '1',
@@ -17,7 +17,7 @@ describe('SessionController Unit Tests', () => {
 
   const token = 'jskljlkshdjshjdhsjhdsjhsj';
 
-  const session = new SessionOutput({
+  const session = new LoginOutput({
     user: userOutput,
     token,
   });
@@ -25,28 +25,28 @@ describe('SessionController Unit Tests', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        SessionController,
+        AuthController,
         {
-          provide: SessionService,
-          useValue: createMock<SessionService>(),
+          provide: AuthService,
+          useValue: createMock<AuthService>(),
         },
       ],
     }).compile();
 
-    controller = module.get<SessionController>(SessionController);
-    service = module.get<SessionService>(SessionService);
+    controller = module.get<AuthController>(AuthController);
+    service = module.get<AuthService>(AuthService);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('create', () => {
+  describe('login', () => {
     it('should login with valid credentials', async () => {
-      jest.spyOn(service, 'create').mockReturnValue(Promise.resolve(session));
+      jest.spyOn(service, 'login').mockReturnValue(Promise.resolve(session));
 
       expect(
-        await controller.create({
+        await controller.login({
           email: 'user@email.com',
           password: '123',
         }),
