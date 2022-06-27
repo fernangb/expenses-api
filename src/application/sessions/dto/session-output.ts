@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsObject, IsString } from 'class-validator';
-import { UserOutput } from 'src/application/users/dto/user-output';
+import { UserOutput } from '../../../application/users/dto/user-output';
 
 interface SessionOutputProps {
   user: UserOutput;
