@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { IsObject, IsString } from 'class-validator';
 import { UserOutput } from 'src/application/users/dto/user-output';
 
 interface SessionOutputProps {
@@ -6,7 +8,12 @@ interface SessionOutputProps {
 }
 
 export class SessionOutput {
+  @ApiProperty()
+  @IsObject()
   user: UserOutput;
+
+  @ApiProperty()
+  @IsString()
   token: string;
 
   constructor(props: SessionOutputProps) {

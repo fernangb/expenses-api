@@ -1,4 +1,13 @@
-import { UserOutput } from 'src/application/users/dto/user-output';
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsBoolean,
+  IsDate,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { UserOutput } from '../../../application/users/dto/user-output';
 
 interface ExpenseOutputProps {
   id: string;
@@ -11,12 +20,33 @@ interface ExpenseOutputProps {
 }
 
 export class ExpenseOutput {
+  @ApiProperty()
+  @IsString()
   id: string;
+
+  @ApiProperty()
+  @IsString()
   name: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
   description?: string;
+
+  @ApiProperty()
+  @IsNumber()
   value: number;
+
+  @ApiProperty()
+  @IsDate()
   dueDate: Date;
+
+  @ApiProperty()
+  @IsObject()
   user: UserOutput;
+
+  @ApiProperty()
+  @IsBoolean()
   isActive: boolean;
 
   constructor(props: ExpenseOutputProps) {
