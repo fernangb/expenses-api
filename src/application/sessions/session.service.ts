@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import BCryptHashProvider from '../../infra/providers/hash/bcrypt/bcrypt-hash.provider';
 import { UserService } from '../users/user.service';
 import { CreateSessionDto } from './dto/create-session.dto';
