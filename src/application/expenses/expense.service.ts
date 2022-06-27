@@ -4,6 +4,7 @@ import InMemoryExpenseRepository from '../../infra/repositories/expenses/in-memo
 import { UserService } from '../users/user.service';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { ExpenseOutput } from './dto/expense-output';
+import { ListExpenseOutput } from './dto/list-expense-output.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
 
 @Injectable()
@@ -15,7 +16,7 @@ export class ExpenseService {
     private userService: UserService,
   ) {}
 
-  async create(createExpenseDto: CreateExpenseDto) {
+  async create(createExpenseDto: CreateExpenseDto): Promise<ExpenseOutput> {
     try {
       const findUser = await this.userService.findOne(createExpenseDto.userId);
 
@@ -45,7 +46,7 @@ export class ExpenseService {
     }
   }
 
-  async findAllByUser(userId: string): Promise<ExpenseOutput[]> {
+  async findAllByUser(userId: string): Promise<ListExpenseOutput> {
     const expensesByUser = await this.expenseRepository.findAllByUser(userId);
 
     return this.toListOutput(expensesByUser);
@@ -113,8 +114,8 @@ export class ExpenseService {
     await this.expenseRepository.delete(id);
   }
 
-  toListOutput(expenses: Expense[]): ExpenseOutput[] {
-    return expenses.map(
+  toListOutput(expenses: Expense[]): ListExpenseOutput {
+    const expenseOutputs = expenses.map(
       (expense) =>
         new ExpenseOutput({
           id: expense.id,
@@ -126,5 +127,15 @@ export class ExpenseService {
           isActive: expense.isActive,
         }),
     );
+
+    const total = expenseOutputs.reduce(
+      (accumulate, expense) => expense.value + accumulate,
+      0,
+    );
+
+    return new ListExpenseOutput({
+      items: expenseOutputs,
+      total,
+    });
   }
 }
