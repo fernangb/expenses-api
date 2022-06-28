@@ -57,7 +57,7 @@ export default class TypeormExpenseRepository
       name: expenseModel.name,
       description: expenseModel.description,
       value: expenseModel.value,
-      dueDate: expenseModel.dueDate,
+      dueDate: new Date(expenseModel.dueDate),
       user: userModel,
     });
   }

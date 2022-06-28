@@ -27,7 +27,7 @@ export class TypeormExpenseModel {
   dueDate: Date;
 
   @Column({ name: 'is_active' })
-  isActive: Date;
+  isActive: boolean;
 
   @Column({ name: 'user_id' })
   userId: string;
