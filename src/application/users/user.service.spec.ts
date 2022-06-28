@@ -1,6 +1,7 @@
 import { createMock } from '@golevelup/ts-jest';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import TypeormUserRepository from '../../infra/repositories/users/typeorm/typeorm-user.repository';
 import { UniqueEntityId } from '../../domain/@shared/entities/unique-entity';
 import { User } from '../../domain/users/entities/user.entity';
 import BCryptHashProvider from '../../infra/providers/hash/bcrypt/bcrypt-hash.provider';
@@ -11,7 +12,7 @@ import { UserService } from './user.service';
 
 describe('UserService Unit Tests', () => {
   let service: UserService;
-  let repository: InMemoryUserRepository;
+  let repository: TypeormUserRepository;
   let hashProvider: BCryptHashProvider;
 
   const user = new User({
@@ -34,8 +35,8 @@ describe('UserService Unit Tests', () => {
       providers: [
         UserService,
         {
-          provide: InMemoryUserRepository,
-          useValue: createMock<InMemoryUserRepository>(),
+          provide: TypeormUserRepository,
+          useValue: createMock<TypeormUserRepository>(),
         },
         {
           provide: BCryptHashProvider,
@@ -45,7 +46,7 @@ describe('UserService Unit Tests', () => {
     }).compile();
 
     service = module.get<UserService>(UserService);
-    repository = module.get<InMemoryUserRepository>(InMemoryUserRepository);
+    repository = module.get<TypeormUserRepository>(TypeormUserRepository);
     hashProvider = module.get<BCryptHashProvider>(BCryptHashProvider);
   });
 

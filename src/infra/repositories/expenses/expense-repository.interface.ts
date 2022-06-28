@@ -1,4 +1,4 @@
-import { Expense } from 'src/domain/expenses/entities/expense.entity';
+import { Expense } from '../../../domain/expenses/entities/expense.entity';
 
 export default interface ExpenseRepositoryInterface {
   create(expense: Expense): Promise<void>;

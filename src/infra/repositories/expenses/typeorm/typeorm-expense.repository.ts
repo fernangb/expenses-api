@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { Expense } from 'src/domain/expenses/entities/expense.entity';
-import { User } from 'src/domain/users/entities/user.entity';
+import { Expense } from '../../../../domain/expenses/entities/expense.entity';
+import { User } from '../../../../domain/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import ExpenseRepositoryInterface from '../expense-repository.interface';
 import { TypeormExpenseModel } from './typeorm-expense.model';

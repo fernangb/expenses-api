@@ -1,7 +1,7 @@
 import TokenInterface from '../../../../domain/@shared/providers/token/token.interface';
 import authConfig from '../../../../config/auth';
 import { sign, verify } from 'jsonwebtoken';
-import validateTokenInputDto from 'src/domain/@shared/providers/token/dto/validate-token-input.dto';
+import validateTokenInputDto from '../../../../domain/@shared/providers/token/dto/validate-token-input.dto';
 import { UnauthorizedException } from '@nestjs/common';
 
 export default class JSONWebTokenProvider implements TokenInterface {

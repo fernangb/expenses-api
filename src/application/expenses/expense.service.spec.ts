@@ -9,10 +9,11 @@ import InMemoryExpenseRepository from '../../infra/repositories/expenses/in-memo
 import { UserOutput } from '../users/dto/user-output';
 import { UserService } from '../users/user.service';
 import { ExpenseService } from './expense.service';
+import TypeormExpenseRepository from '../../infra/repositories/expenses/typeorm/typeorm-expense.repository';
 
 describe('ExpenseService Unit Tests', () => {
   let service: ExpenseService;
-  let repository: InMemoryExpenseRepository;
+  let repository: TypeormExpenseRepository;
   let userService: UserService;
 
   const expense = new Expense({
@@ -71,8 +72,8 @@ describe('ExpenseService Unit Tests', () => {
       providers: [
         ExpenseService,
         {
-          provide: InMemoryExpenseRepository,
-          useValue: createMock<InMemoryExpenseRepository>(),
+          provide: TypeormExpenseRepository,
+          useValue: createMock<TypeormExpenseRepository>(),
         },
         {
           provide: UserService,
@@ -82,9 +83,7 @@ describe('ExpenseService Unit Tests', () => {
     }).compile();
 
     service = module.get<ExpenseService>(ExpenseService);
-    repository = module.get<InMemoryExpenseRepository>(
-      InMemoryExpenseRepository,
-    );
+    repository = module.get<TypeormExpenseRepository>(TypeormExpenseRepository);
     userService = module.get<UserService>(UserService);
   });
 
