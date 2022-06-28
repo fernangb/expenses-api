@@ -1,3 +1,4 @@
+import { InjectRepository } from '@nestjs/typeorm';
 import { Expense } from 'src/domain/expenses/entities/expense.entity';
 import { User } from 'src/domain/users/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -7,7 +8,10 @@ import { TypeormExpenseModel } from './typeorm-expense.model';
 export default class TypeormExpenseRepository
   implements ExpenseRepositoryInterface
 {
-  constructor(private repository: Repository<TypeormExpenseModel>) {}
+  constructor(
+    @InjectRepository(TypeormExpenseModel)
+    private repository: Repository<TypeormExpenseModel>,
+  ) {}
 
   async create(expense: Expense): Promise<void> {
     await this.repository.save(this.repository.create(expense));

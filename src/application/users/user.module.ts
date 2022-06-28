@@ -6,9 +6,14 @@ import { HashModule } from '../@shared/providers/hash/hash.module';
 import TypeormUserRepository from 'src/infra/repositories/users/typeorm/typeorm-user.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeormUserModel } from 'src/infra/repositories/users/typeorm/typeorm-user.model';
+import { userProviders } from './user.providers';
 
 @Module({
-  imports: [HashModule],
+  imports: [
+    TypeOrmModule,
+    TypeOrmModule.forFeature([TypeormUserModel]),
+    HashModule,
+  ],
   controllers: [UserController],
   providers: [UserService, InMemoryUserRepository, TypeormUserRepository],
   exports: [UserService],

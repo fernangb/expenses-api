@@ -9,7 +9,11 @@ import TypeormExpenseRepository from 'src/infra/repositories/expenses/typeorm/ty
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [AuthModule, UserModule],
+  imports: [
+    TypeOrmModule.forFeature([TypeormExpenseModel]),
+    AuthModule,
+    UserModule,
+  ],
   controllers: [ExpenseController],
   providers: [
     ExpenseService,

@@ -1,4 +1,5 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import TypeormUserRepository from 'src/infra/repositories/users/typeorm/typeorm-user.repository';
 import { User } from '../../domain/users/entities/user.entity';
 import BCryptHashProvider from '../../infra/providers/hash/bcrypt/bcrypt-hash.provider';
 import InMemoryUserRepository from '../../infra/repositories/users/in-memory/in-memory-user.repository';
@@ -9,8 +10,8 @@ import { UserOutput } from './dto/user-output';
 @Injectable()
 export class UserService {
   constructor(
-    @Inject(InMemoryUserRepository)
-    private userRepository: InMemoryUserRepository,
+    @Inject(TypeormUserRepository)
+    private userRepository: TypeormUserRepository,
     private hashProvider: BCryptHashProvider,
   ) {}
 

@@ -5,10 +5,12 @@ import { AppService } from './app.service';
 import { ExpenseModule } from './application/expenses/expense.module';
 import { AuthModule } from './application/auth/auth.module';
 import { UserModule } from './application/users/user.module';
+import { DatabaseModule } from './database.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    DatabaseModule,
     AuthModule,
     UserModule,
     ExpenseModule,

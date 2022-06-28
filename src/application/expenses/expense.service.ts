@@ -1,4 +1,5 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import TypeormExpenseRepository from 'src/infra/repositories/expenses/typeorm/typeorm-expense.repository';
 import { Expense } from '../../domain/expenses/entities/expense.entity';
 import InMemoryExpenseRepository from '../../infra/repositories/expenses/in-memory/in-memory-expense.repository';
 import { UserService } from '../users/user.service';
@@ -10,8 +11,8 @@ import { UpdateExpenseDto } from './dto/update-expense.dto';
 @Injectable()
 export class ExpenseService {
   constructor(
-    @Inject(InMemoryExpenseRepository)
-    private expenseRepository: InMemoryExpenseRepository,
+    @Inject(TypeormExpenseRepository)
+    private expenseRepository: TypeormExpenseRepository,
     @Inject(UserService)
     private userService: UserService,
   ) {}
@@ -19,7 +20,6 @@ export class ExpenseService {
   async create(createExpenseDto: CreateExpenseDto): Promise<ExpenseOutput> {
     try {
       const findUser = await this.userService.findOne(createExpenseDto.userId);
-
       if (!findUser) throw new BadRequestException('User not found');
 
       const expense = new Expense({

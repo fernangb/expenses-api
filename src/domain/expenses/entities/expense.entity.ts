@@ -24,7 +24,7 @@ export class Expense {
     this.name = props.name;
     this.description = props.description;
     this.value = props.value;
-    this.dueDate = props.dueDate;
+    this.dueDate = new Date(props.dueDate);
     this.user = props.user;
     this.isActive = true;
 
