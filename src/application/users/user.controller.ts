@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Logger } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import {
@@ -13,6 +13,8 @@ import ExceptionOutput from '../@shared/exceptions/dto/exception-output';
 @Controller('users')
 @ApiTags('User')
 export class UserController {
+  private logger = new Logger('User');
+
   constructor(private readonly userService: UserService) {}
 
   @Post()
@@ -27,6 +29,10 @@ export class UserController {
     type: ExceptionOutput,
   })
   create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+    try {
+      return this.userService.create(createUserDto);
+    } catch (error) {
+      this.logger.error(`[create] error: ${error.message}`);
+    }
   }
 }

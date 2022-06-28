@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Logger } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import ExceptionOutput from '../@shared/exceptions/dto/exception-output';
 import { AuthService } from './auth.service';
@@ -8,6 +8,7 @@ import { LoginOutput } from './dto/login-output.dto';
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
+  private logger = new Logger('Auth');
   constructor(private readonly authService: AuthService) {}
 
   @Post('/login')
@@ -23,6 +24,10 @@ export class AuthController {
     type: ExceptionOutput,
   })
   login(@Body() createAuthDto: LoginInputDto) {
-    return this.authService.login(createAuthDto);
+    try {
+      return this.authService.login(createAuthDto);
+    } catch (error) {
+      this.logger.error(`[login] error: ${error.message}`);
+    }
   }
 }
